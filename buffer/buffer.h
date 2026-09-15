@@ -1,7 +1,10 @@
+#ifndef BUFFER_H_
+#define BUFFER_H_
+
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MAX 32
+#define MAX_BUFFER 32
 
 typedef enum {
     RED_LED,
@@ -23,7 +26,7 @@ typedef enum {
 } Operation;
 
 typedef struct {
-    Action action[MAX];
+    Action action[MAX_BUFFER];
     uint8_t idx_original;
     uint8_t idx_inserted;
 } Buffer;
@@ -34,3 +37,8 @@ extern Buffer buffer_key;
 void clean_buffer(Buffer*);
 bool insert_buffer(Buffer*, Event, Operation op);
 bool compare_buffer(Buffer*);
+Event get_event(Buffer*, Operation, uint8_t);
+bool is_ok(Buffer*);
+void clean_inserted(Buffer*);
+
+#endif

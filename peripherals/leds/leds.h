@@ -1,13 +1,18 @@
+#ifndef LEDS_H_
+#define LEDS_H_
+
 #include <stdio.h>
 
 
-enum type_led {
-    RED_LED = 0,
-    BLUE_LED,
-    YELLOW_LED,
-    GREEN_LED,
-};
+typedef enum {
+    TYPE_RED_LED,
+    TYPE_BLUE_LED,
+    TYPE_GREEN_LED,
+    TYPE_YELLOW_LED
+} type_led;
 
 void init_leds();
 void on_led(type_led);
 void off_led(type_led);
+
+#endif

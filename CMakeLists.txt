@@ -1,17 +1,26 @@
 cmake_minimum_required(VERSION 3.13)
-
 include(pico_sdk_import.cmake)
 
-project(pico_blink C CXX ASM)
-
+project(dual_memory_game C CXX ASM)
 pico_sdk_init()
 
-add_executable(pico_blink
+add_executable(dual_memory_game
     main.c
+    buffer/buffer.c
+    engine/word/word_engine.c
+    engine/led/led_engine.c
+    peripherals/buttons/buttons.c
+    peripherals/leds/leds.c
 )
 
-target_link_libraries(pico_blink
+target_include_directories(dual_memory_game PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}
+)
+
+target_link_libraries(dual_memory_game
     pico_stdlib
+    pico_multicore  # habilita la API bare-metal multicore
+    pico_rand
 )
 
-pico_add_extra_outputs(pico_blink)
+pico_add_extra_outputs(dual_memory_game)
