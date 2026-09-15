@@ -24,7 +24,7 @@ bool insert_buffer(Buffer *buffer, Event event, Operation op) {
             return false;
         }
         Action action = buffer->action[buffer->idx_inserted];
-        action.original = event;
+        action.inserted = event;
         buffer->action[buffer->idx_inserted] = action;
         buffer->idx_inserted++;
         return true;

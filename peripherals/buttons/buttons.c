@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "pico/stdlib.h"
 #include "peripherals/buttons/buttons.h"
 #include "buffer/buffer.h"
@@ -35,7 +36,7 @@ void init_buttons() {
     for (uint8_t i = 0; i < 5; i++) {
         gpio_init(buttons[i].pin);
         gpio_set_dir(buttons[i].pin, GPIO_IN);
-        gpio_pull_down(buttons[i].pin);
+        gpio_pull_up(buttons[i].pin);
     }
 }
 
@@ -79,15 +80,17 @@ static void fsm(Button *button) {
     if (button->pin == 16) {
         switch (button->state) {
             case WAIT_BUTTON:
-                if (gpio_get(button->pin)) {
+                if (!gpio_get(button->pin)) {
+                    printf("BUTTON: OK pulsado\n");
                     button->last_debounce = to_ms_since_boot(get_absolute_time());
                     button->state = DEBOUNCE_BUTTON;
                 }
             break;
 
             case DEBOUNCE_BUTTON:
-                if ((to_ms_since_boot(get_absolute_time()) - button->last_debounce) >= DEBOUNCE_BUTTON) {
-                    if (gpio_get(button->pin)) {
+                if ((to_ms_since_boot(get_absolute_time()) - button->last_debounce) >= DEBOUNCE_TIME) {
+                    if (!gpio_get(button->pin)) {
+                        printf("BUTTON: OK sigue pulsado\n");
                         button->state = PRESS_BUTTON;
                         Event event = OK;
                         insert_buffer(&buffer_leds, event, INSERTED);
@@ -98,7 +101,8 @@ static void fsm(Button *button) {
             break;
 
             case PRESS_BUTTON:
-                if (!gpio_get(button->pin)) {
+                if (gpio_get(button->pin)) {
+                    printf("BUTTON: OK liberado\n");
                     button->state = WAIT_BUTTON;
                 }
             break;
@@ -106,15 +110,17 @@ static void fsm(Button *button) {
     } else {
         switch (button->state) {
             case WAIT_BUTTON:
-                if (gpio_get(button->pin)) {
+                if (!gpio_get(button->pin)) {
+                    printf("BUTTON: %u pulsado\n", button->pin);
                     button->last_debounce = to_ms_since_boot(get_absolute_time());
                     button->state = DEBOUNCE_BUTTON;
                 }
             break;
 
             case DEBOUNCE_BUTTON:
-                if ((to_ms_since_boot(get_absolute_time()) - button->last_debounce) >= DEBOUNCE_BUTTON) {
-                    if (gpio_get(button->pin)) {
+                if ((to_ms_since_boot(get_absolute_time()) - button->last_debounce) >= DEBOUNCE_TIME) {
+                    if (!gpio_get(button->pin)) {
+                        printf("BUTTON: %u sigue pulsado\n", button->pin);
                         button->state = PRESS_BUTTON;
                         Event event = convert_button_to_event(button->pin);
                         insert_buffer(&buffer_leds, event, INSERTED);
@@ -127,7 +133,8 @@ static void fsm(Button *button) {
             break;
 
             case PRESS_BUTTON:
-                if (!gpio_get(button->pin)) {
+                if (gpio_get(button->pin)) {
+                    printf("BUTTON: %u liberado\n", button->pin);
                     type_led led = convert_button_to_led(button->pin);
                     off_led(led);
                     button->state = WAIT_BUTTON;

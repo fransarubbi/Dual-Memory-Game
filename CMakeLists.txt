@@ -23,4 +23,7 @@ target_link_libraries(dual_memory_game
     pico_rand
 )
 
+pico_enable_stdio_usb(dual_memory_game 1)
+pico_enable_stdio_uart(dual_memory_game 0)
+
 pico_add_extra_outputs(dual_memory_game)
