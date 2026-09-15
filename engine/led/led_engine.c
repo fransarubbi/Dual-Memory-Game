@@ -4,6 +4,7 @@
 #include "pico/rand.h"
 #include "peripherals/leds/leds.h"
 #include "peripherals/buttons/buttons.h"
+#include "led_engine.h"
 #include "buffer/buffer.h"
 
 
@@ -52,9 +53,9 @@ static void reproduce_sequence() {
     for (uint8_t i = 0; i < level; i++) {
         Event event = get_event(&buffer_leds, ORIGINAL, i);
         on_led(event);
-        sleep_ms(500);
+        sleep_ms(REPRODUCE_TIME);
         off_led(event);
-        sleep_ms(500);
+        sleep_ms(REPRODUCE_TIME);
     }
 }
 
@@ -62,9 +63,9 @@ static void victory() {
     for (uint8_t i = 0; i < 20; i++) {
         Event event = GREEN_LED;
         on_led(event);
-        sleep_ms(300);
+        sleep_ms(WIN_OR_LOSE);
         off_led(event);
-        sleep_ms(300);
+        sleep_ms(WIN_OR_LOSE);
     }
 }
 
@@ -72,9 +73,9 @@ static void defeat() {
     for (uint8_t i = 0; i < 20; i++) {
         Event event = RED_LED;
         on_led(event);
-        sleep_ms(300);
+        sleep_ms(WIN_OR_LOSE);
         off_led(event);
-        sleep_ms(300);
+        sleep_ms(WIN_OR_LOSE);
     }
 }
 
@@ -88,7 +89,7 @@ static void fsm() {
         break;
 
         case GENERATE:
-            clean_inserted(&buffer_leds);
+            clean_buffer(&buffer_leds);
             printf("FSM: GENERATE\n");
             generate_sequence();
             state = REPRODUCE;
@@ -149,6 +150,6 @@ void led_game() {
     while (1) {
         fsm();
         read_buttons();
-        sleep_ms(50); 
+        sleep_ms(SLEEP); 
     }
 }

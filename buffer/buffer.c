@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdint.h>
 #include "buffer/buffer.h"
 
@@ -35,16 +36,19 @@ bool insert_buffer(Buffer *buffer, Event event, Operation op) {
 
 bool compare_buffer(Buffer *buffer) {
     if ((buffer->idx_original + 1) != buffer->idx_inserted) {
+        printf("BUFFER: idx_original: %d, idx_inserted: %d\n", buffer->idx_original, buffer->idx_inserted);
         return false;
     }
     for (uint8_t i = 0; i < buffer->idx_original; i++) {
         Action action = buffer->action[i];
+        printf("BUFFER: original: %d , inserted: %d\n", action.original, action.inserted);
         if (action.original != action.inserted) {
             return false;
         }
     }
     Action action = buffer->action[buffer->idx_inserted - 1];
     if (action.inserted == OK) {
+        printf("BUFFER: OK encontrado\n");
         return true;
     }
     return false;
