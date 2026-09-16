@@ -12,6 +12,7 @@ add_executable(dual_memory_game
     peripherals/buttons/buttons.c
     peripherals/leds/leds.c
     peripherals/keyboard/keyboard.c
+    peripherals/display/display.c
 )
 
 target_include_directories(dual_memory_game PRIVATE
@@ -20,8 +21,9 @@ target_include_directories(dual_memory_game PRIVATE
 
 target_link_libraries(dual_memory_game
     pico_stdlib
-    pico_multicore  # habilita la API bare-metal multicore
+    pico_multicore 
     pico_rand
+    hardware_i2c
 )
 
 pico_enable_stdio_usb(dual_memory_game 1)
