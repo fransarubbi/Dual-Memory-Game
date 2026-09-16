@@ -11,6 +11,7 @@ add_executable(dual_memory_game
     engine/led/led_engine.c
     peripherals/buttons/buttons.c
     peripherals/leds/leds.c
+    peripherals/keyboard/keyboard.c
 )
 
 target_include_directories(dual_memory_game PRIVATE

@@ -7,12 +7,31 @@
 #define MAX_BUFFER 32
 
 typedef enum {
+    // Leds
     RED_LED,
     BLUE_LED,
     GREEN_LED,
     YELLOW_LED,
     OK,
-    // aca irian los de tecl matricial
+
+    // Teclado
+    ZERO,
+    ONE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE,
+    SIX,
+    SEVEN,
+    EIGHT,
+    NINE,
+    TEN,
+    LETTER_A,
+    LETTER_B,
+    LETTER_C,
+    LETTER_D,
+    STAR,
+    NUMERAL
 } Event;
 
 typedef struct {
