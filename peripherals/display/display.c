@@ -3,7 +3,6 @@
 #include "hardware/i2c.h"
 
 
-
 // envia un byte en bruto al expansor PCF8574
 static void i2c_write_byte(uint8_t val) {
     i2c_write_blocking(I2C_PORT, LCD_ADDR, &val, 1, false);
@@ -26,14 +25,15 @@ static void lcd_send_nibble(uint8_t nibble, uint8_t mode) {
 }
 
 // envia un byte completo dividido en dos paquetes de 4 bits
-void lcd_send_byte(uint8_t val, uint8_t mode) {
+static void lcd_send_byte(uint8_t val, uint8_t mode) {
     lcd_send_nibble(val & 0xF0, mode);        // Parte alta
     lcd_send_nibble((val << 4) & 0xF0, mode); // Parte baja
 }
 
 // Modo: 0 = Comando, 1 = Dato (caracter)
-void lcd_send_cmd(uint8_t cmd) { lcd_send_byte(cmd, 0); }
+static void lcd_send_cmd(uint8_t cmd) { lcd_send_byte(cmd, 0); }
 void lcd_send_char(char c)     { lcd_send_byte((uint8_t)c, 1); }
+
 
 void lcd_init(uint sda_pin, uint scl_pin) {
     // inicializar bus I2C a 100 kHz
@@ -66,4 +66,17 @@ void lcd_print(const char *str) {
     while (*str) {
         lcd_send_char(*str++);
     }
+}
+
+char convert_to_char(Event event) {
+    if (event < ZERO || event > LETTER_D) {
+        return ' ';
+    }
+    static const char map[14] = {
+        '0', '1', '2', '3',
+        '4', '5', '6', '7',
+        '8', '9', 'A', 'B',
+        'C', 'D',
+    };
+    return map[event - 5];
 }

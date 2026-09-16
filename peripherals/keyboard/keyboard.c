@@ -4,6 +4,7 @@
 #include "pico/stdlib.h"
 #include "keyboard.h"
 #include "buffer/buffer.h"
+#include "peripherals/display/display.h"
 
 typedef struct {
     uint8_t scan_row;
@@ -39,11 +40,11 @@ static void init_scan(void) {
 }
 
 static Event decoder(uint8_t code) {
-    static const char map[16] = {
+    static const Event map[16] = {
         ONE,    TWO,    THREE,  LETTER_A,
         FOUR,   FIVE,   SIX,    LETTER_B,
         SEVEN,  EIGHT,  NINE,   LETTER_C,
-        STAR,   ZERO,   NUMERAL,LETTER_D
+        OK,     ZERO,     OK,     LETTER_D
     };
     return map[code];
 }
@@ -89,7 +90,7 @@ static uint8_t read_keyboard(uint8_t row){
     else return 4; // ninguna tecla pulsada en esta fila
 }
 
-void update_fsm_keyboard(void){
+void fsm_keyboard(void){
     switch (state_key){
         case WAIT_KEYBOARD:
             sleep_ms(DELAY_SCAN);
@@ -122,6 +123,13 @@ void update_fsm_keyboard(void){
                 scan.key_ok = true;
                 scan.key_code = scan.key_row * COLS + scan.key_col;
                 Event event = decoder(scan.key_code);
+
+                if (event != OK) {
+                    char character = convert_to_char(event);
+                    lcd_set_cursor(1, 0);
+                    lcd_send_char(character);
+                }
+
                 insert_buffer(&buffer_key, event, INSERTED);
                 state_key = WAIT_KEYBOARD;
             }

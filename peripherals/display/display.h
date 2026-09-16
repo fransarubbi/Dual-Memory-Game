@@ -2,6 +2,7 @@
 #define DISPLAY_H_
 
 #include <stdbool.h>
+#include "buffer/buffer.h"
 
 #define LCD_ADDR 0x27
 #define I2C_PORT i2c1
@@ -13,5 +14,7 @@
 void lcd_init(unsigned int, unsigned int);
 void lcd_set_cursor(int, int);
 void lcd_print(const char *);
+void lcd_send_char(char);
+char convert_to_char(Event);
 
 #endif

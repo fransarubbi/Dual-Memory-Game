@@ -83,20 +83,17 @@ static void fsm() {
     switch (state) {
         case INIT:
             if (is_ok(&buffer_leds)) {
-                printf("FSM: Ok ingresado en INIT\n");
                 state = GENERATE;
             }
         break;
 
         case GENERATE:
             clean_buffer(&buffer_leds);
-            printf("FSM: GENERATE\n");
             generate_sequence();
             state = REPRODUCE;
             break;
 
         case REPRODUCE:
-            printf("FSM: REPRODUCE\n");
             reproduce_sequence();
             clean_inserted(&buffer_leds);
             state = ANSWER;
@@ -104,25 +101,21 @@ static void fsm() {
 
         case ANSWER:
             if (is_ok(&buffer_leds)) {
-                printf("FSM: Se ingreso OK en ANSWER\n");
                 state = COMPARE;
             }
         break;
 
         case COMPARE:
-            printf("FSM: COMPARE\n");
             bool answ = compare_buffer(&buffer_leds);
             if (answ) {
                 if (level == 10) {
                     victory();
                     state = WAIT_FOR_RESET;
                 } else {
-                    printf("FSM: Subiendo de nivel\n");
                     level++;
                     state = GENERATE;
                 }
             } else {
-                printf("FSM: Derrota!\n");
                 defeat();
                 state = WAIT_FOR_RESET;
             }
@@ -130,7 +123,6 @@ static void fsm() {
 
         case WAIT_FOR_RESET:
             if (is_ok(&buffer_leds)) {
-                printf("FSM: Se ingreso OK en WAIT_FOR_RESET\n");
                 clean_buffer(&buffer_leds);
                 level = 1;
                 state = INIT;

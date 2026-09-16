@@ -12,6 +12,8 @@ typedef enum {
     BLUE_LED,
     GREEN_LED,
     YELLOW_LED,
+
+    // Ambos
     OK,
 
     // Teclado
@@ -25,13 +27,10 @@ typedef enum {
     SEVEN,
     EIGHT,
     NINE,
-    TEN,
     LETTER_A,
     LETTER_B,
     LETTER_C,
     LETTER_D,
-    STAR,
-    NUMERAL
 } Event;
 
 typedef struct {

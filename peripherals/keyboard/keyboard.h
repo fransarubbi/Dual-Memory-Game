@@ -15,7 +15,7 @@ typedef enum{
 } StateKey;
 
 void init_keyboard(void);
-void update_fsm_keyboard(void);
+void fsm_keyboard(void);
 
 
 #endif
