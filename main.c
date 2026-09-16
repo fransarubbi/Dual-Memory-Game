@@ -5,11 +5,9 @@
 #include "engine/word/word_engine.h"
 
 int main(void) {
-    // inicializar I/O general de la placa
-    stdio_init_all();
+    stdio_init_all();  
 
     sleep_ms(2000);
-    printf("--- Sistema iniciado ---\n");
     
     // activar core 1
     multicore_launch_core1(word_game);

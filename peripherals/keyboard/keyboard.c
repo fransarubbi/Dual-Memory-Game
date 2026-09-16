@@ -127,6 +127,9 @@ void fsm_keyboard(void){
                 if (event != OK) {
                     char character = convert_to_char(event);
                     lcd_set_cursor(1, 0);
+                    lcd_print("                ");
+                    sleep_ms(200);
+                    lcd_set_cursor(1, 0);
                     lcd_send_char(character);
                 }
 
